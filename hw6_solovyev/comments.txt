@@ -1,0 +1,75 @@
+Что интересно решето эратосфена потребляет немного больше памяти, 
+становится заметно при поиске 500го простого числа.
+Разница появляется на этапе создания массива чисел для отсева.
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+     9     14.3 MiB     14.3 MiB   @profile
+    10                             def simpleGet(num):
+    11     14.3 MiB      0.0 MiB   	lst = []
+    12     14.3 MiB      0.0 MiB   	k = 0
+    13     14.3 MiB      0.0 MiB   	digit = 2
+    14     14.3 MiB      0.0 MiB   	while len(lst) < num:
+    15     14.3 MiB      0.0 MiB   		for i in range(2, digit):
+    16     14.3 MiB      0.0 MiB   			if digit % i == 0:
+    17     14.3 MiB      0.0 MiB   				break
+    18                             		else:
+    19     14.3 MiB      0.0 MiB   			lst.append(digit)
+    20     14.3 MiB      0.0 MiB   		digit += 1
+    21     14.3 MiB      0.0 MiB   	return lst[-1]
+
+
+простой поиск:  3571
+Filename: t1.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+    23     14.3 MiB     14.3 MiB   @profile
+    24                             def eratosfen(num):
+    25     14.3 MiB      0.0 MiB   	lst = []
+    26     14.6 MiB      0.3 MiB   	tempArr = list(range(num*10))
+    27     14.6 MiB      0.0 MiB   	tempArr[1] = 0
+    28     14.6 MiB      0.0 MiB   	digit = 2
+    29     14.6 MiB      0.0 MiB   	while len(lst) < num:
+    30     14.6 MiB      0.0 MiB   		if tempArr[digit] != 0:
+    31     14.6 MiB      0.0 MiB   			lst.append(tempArr[digit])
+    32     14.6 MiB      0.0 MiB   			for j in range(digit, num*10, digit):
+    33     14.6 MiB      0.0 MiB   				tempArr[j] = 0
+    34     14.6 MiB      0.0 MiB   		digit += 1
+    35     14.6 MiB      0.0 MiB   	return lst[-1]
+
+******************************************************************
+В примере в матрицами более компактный способ, хоть и оказался не быстрее,
+но более экономичен в плане потребления памяти. Скорее всего за счет того,
+что меньше вызовов функций, котоые надо держать в памяти.
+on/hw6_solovyev$ python3 t1_matrix.py 
+Filename: t1_matrix.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+    40     16.7 MiB     16.7 MiB   @profile
+    41                             def main():
+    42     48.5 MiB     31.8 MiB       matrix = genMatrix()
+    43     57.2 MiB      8.8 MiB       colsList = getColumns(matrix)
+    44     57.2 MiB      0.0 MiB       minList = []
+    45     57.2 MiB      0.0 MiB       for i in range(1000):
+    46     57.2 MiB      0.0 MiB           minList.append(getMinInList(colsList[i]))
+
+
+Filename: t1_matrix.py
+
+Line #    Mem usage    Increment   Line Contents
+================================================
+    49     25.7 MiB     25.7 MiB   @profile
+    50                             def alternate():
+    51     48.4 MiB     22.7 MiB       matrix = genMatrix()
+    52     48.4 MiB      0.0 MiB       minColElem2 = None
+    53     48.4 MiB      0.0 MiB       for i in range(100):
+    54     48.4 MiB      0.0 MiB           minColElem1 = matrix[0][i]
+    55     48.4 MiB      0.0 MiB           for j in range(1000):
+    56     48.4 MiB      0.0 MiB               if matrix[j][i] < minColElem1:
+    57     48.4 MiB      0.0 MiB                   minColElem1 = matrix[j][i]
+    58     48.4 MiB      0.0 MiB                   if not minColElem2:
+    59     48.4 MiB      0.0 MiB                       minColElem2 = minColElem1
+    60     48.4 MiB      0.0 MiB                   elif minColElem2 < minColElem1:
+    61     48.4 MiB      0.0 MiB                       minColElem2 = minColElem1
